@@ -1,0 +1,46 @@
+{
+  "SEED": 42,
+  "VOCAB_SIZE": 150,
+  "MAX_LEN": 500,
+  "EMBED_DIM": 64,
+  "BATCH_SIZE": 128,
+  "EPOCHS": 35,
+  "L2_RATE": 0.0005,
+  "SE_RATIO": 16,
+  "loss_function": "binary_crossentropy",
+  "class_weights_train": {
+    "0": 0.6637862326439867,
+    "1": 2.026379818158535
+  },
+  "OPTIMAL_THRESHOLD": 0.24505497515201569,
+  "DEFAULT_THRESHOLD": 0.5,
+  "train_samples": 443072,
+  "val_samples": 110768,
+  "test_samples": 141008,
+  "architecture": "ResNet_1D_SE",
+  "residual_blocks": [
+    {
+      "filters": 32,
+      "kernel_size": 9
+    },
+    {
+      "filters": 64,
+      "kernel_size": 7
+    },
+    {
+      "filters": 128,
+      "kernel_size": 5
+    },
+    {
+      "filters": 256,
+      "kernel_size": 3
+    }
+  ],
+  "dense_head": 128,
+  "dropout_rate": 0.3,
+  "spatial_dropout": 0.2,
+  "results": {
+    "val_accuracy": 0.9790101647377014,
+    "val_loss": 0.08361560106277466
+  }
+}

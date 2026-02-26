@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="header">
+        <h2>🛡️ AI Phishing Shield</h2>
+        <p>Quét và phân tích URL bằng Deep Learning</p>
+    </div>
+    
+    <div class="main-content">
+        <button id="scan-btn" class="btn">🚀 Phân Tích Trang Này</button>
+        
+        <div id="result-box" class="hidden">
+            <h3 id="status-title"></h3>
+            <p id="url-scanned"></p>
+            
+            <div class="metrics">
+                <span id="prob-text"></span>
+            </div>
+            
+            <p id="ai-message" class="details"></p>
+        </div>
+        
+        <div id="loading" class="hidden">
+            <div class="spinner"></div>
+            <p>AI đang bóc tách đặc trưng...</p>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

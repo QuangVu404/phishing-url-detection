@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "AI Phishing Shield",
+  "version": "1.0.0",
+  "description": "Bảo vệ bạn khỏi các trang web lừa đảo bằng công nghệ Deep Learning.",
+  "permissions": [
+    "activeTab"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Kiểm tra an toàn trang web"
+  }
+}
