@@ -1,144 +1,54 @@
-🛡️ Phishing URL Detection System
+AI Phishing Shield: Phishing URL Detection System
+Hệ thống phát hiện URL độc hại dựa trên Deep Learning (CNN), được triển khai dưới dạng API (FastAPI/Docker) và tích hợp Chrome Extension để bảo vệ người dùng trong thời gian thực.
 
-A Deep Learning-based phishing URL detection system using CNN, deployed with FastAPI and Docker.
+1. Tổng quan dự án
+Dự án xây dựng một quy trình hoàn chỉnh (End-to-End Pipeline) từ xử lý dữ liệu, huấn luyện mô hình đến triển khai thực tế. Hệ thống sử dụng mạng nơ-ron cuộn 1 chiều (1D-CNN) ở cấp độ ký tự (Character-level) để nhận diện các đặc điểm bất thường trong cấu trúc URL mà không cần bóc tách thủ công các đặc trưng (Feature Engineering).
 
-This project builds an end-to-end pipeline from data preprocessing and model training to API deployment for real-time phishing URL prediction.
+2. Kiến trúc mô hình (Model Architecture)
+Mô hình được thiết kế để xử lý dữ liệu dạng chuỗi ký tự, bao gồm các lớp chính:
+Character Tokenization: Chuyển đổi URL thành chuỗi số dựa trên bộ từ điển ký tự.
+Embedding Layer: Biểu diễn các ký tự trong không gian vectơ thấp chiều.
+1D Convolutional Layers: Trích xuất các đặc trưng cục bộ (n-grams) từ chuỗi URL.
+Global MaxPooling: Giữ lại các đặc trưng quan trọng nhất từ các bộ lọc.
+Fully Connected Layers: Phân loại dựa trên các đặc trưng đã trích xuất.
+Sigmoid Output: Trả về xác suất (Probability) để phân loại nhị phân (Legitimate/Phishing).
 
-📌 Project Overview
+3. Quy trình xử lý dữ liệu (Data Pipeline)
+Dữ liệu được xử lý qua các bước nghiêm ngặt để đảm bảo độ chính xác:
+Cleaning: Chuẩn hóa URL (lowercase), loại bỏ trùng lặp.
+Sanitization: Sử dụng Regex để gắn nhãn các thành phần nhạy cảm như IP, Token, ID hoặc các chuỗi Hex dài.
+Vectorization: Padding chuỗi về độ dài cố định (500 ký tự) để đưa vào mô hình.
 
-Phishing attacks commonly use malicious URLs to trick users into revealing sensitive information.
-This project aims to classify URLs as:
-
-✅ Legitimate
-
-🚨 Phishing
-
-The system uses a Character-level Convolutional Neural Network (CNN) to learn URL patterns and detect suspicious structures.
-
-🧠 Model Architecture
-
-Character-level tokenization
-
-Padding to fixed sequence length
-
-Embedding Layer
-
-1D Convolutional Layers
-
-MaxPooling
-
-Fully Connected Layers
-
-Sigmoid output (Binary Classification)
-
-📊 Dataset
-
-Combined phishing and legitimate URL datasets
-
-Duplicates removed
-
-Data cleaned and normalized
-
-Train / Validation / Test split
-
-📈 Evaluation Metrics
-
-The model is evaluated using:
-
-Accuracy
-
-Precision
-
-Recall
-
-F1-score
-
-ROC-AUC
-
-Confusion Matrix
-
-Special focus is placed on Recall for the phishing class, since missing a phishing URL is more dangerous than a false alarm.
-
-⚙️ Installation
-1️⃣ Clone repository
-git clone https://github.com/QuangVu404/phishing-url-detection.git
-cd phishing-url-detection
-2️⃣ Install dependencies
+4. Hướng dẫn cài đặt và sử dụng
+Triển khai cục bộ (Local Deployment)
+Cài đặt thư viện:
+Bash
 pip install -r requirements.txt
-▶️ Run Locally
-
-Start FastAPI server:
-
-uvicorn app.main:app --reload
-
-API will be available at:
-
-http://127.0.0.1:8000
-
-Swagger docs:
-
-http://127.0.0.1:8000/docs
-🐳 Run with Docker
-
-Build image:
-
+Khởi chạy Server:
+Bash
+uvicorn app.main:app --host 0.0.0.0 --port 8000
+API Docs: Truy cập http://localhost:8000/docs để kiểm thử qua Swagger UI.
+Triển khai với Docker
+Bash
 docker build -t phishing-detector .
+docker run -p 8000:7860 phishing-detector
 
-Run container:
-
-docker run -p 8000:8000 phishing-detector
-🔍 API Usage
-POST /predict
-
-Request:
-
-{
-  "url": "http://example.com/login"
-}
-
+5. Cấu trúc API (API Usage)
+Endpoint: POST /predict
+Request Body:
+JSON
+{ "url": "http://example-malicious-site.com" }
 Response:
-
+JSON
 {
-  "url": "http://example.com/login",
-  "prediction": "phishing",
-  "probability": 0.91
+  "url": "http://example-malicious-site.com",
+  "prediction": "PHISHING",
+  "probability": 0.985
 }
-🧪 Training the Model
 
-Open:
-
-notebooks/training.ipynb
-
-Steps included:
-
-Data cleaning
-
-Tokenization
-
-Model training
-
-Evaluation
-
-Model saving
-
-🏗 Technologies Used
-
-Python
-
-TensorFlow / Keras
-
-Scikit-learn
-
-FastAPI
-
-Docker
-
-📌 Future Improvements
-
-Deploy to cloud (AWS / GCP / HuggingFace Spaces)
-
-Add browser extension integration
-
-Improve robustness against adversarial URLs
-
-Add CI/CD pipeline
+6. Công nghệ sử dụng
+Ngôn ngữ: Python.
+Deep Learning: TensorFlow / Keras.
+Backend: FastAPI.
+DevOps: Docker, Hugging Face Spaces.
+Frontend: JavaScript (Chrome Extension API).
