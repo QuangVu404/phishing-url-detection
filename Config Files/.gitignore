@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.env
+
+# Models & Data
+models/*.keras
+models/*.pkl
+data/*.csv
+!data/sample_urls.csv
+
+# Testing
+.pytest_cache/
+coverage.xml

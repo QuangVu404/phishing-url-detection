@@ -25,7 +25,7 @@ document.getElementById('scan-btn').addEventListener('click', async () => {
 
         urlScanned.innerText = currentUrl;
 
-        // 2. Gọi API đến FastAPI Server (Đảm bảo FastAPI đang chạy ở cổng 8000)
+        // 2. Gọi API đến FastAPI Server
         const API_URL = 'https://quangvu404-phishing-shield-api.hf.space/predict';
         
         const response = await fetch(API_URL, {
