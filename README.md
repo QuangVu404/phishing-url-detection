@@ -1,80 +1,117 @@
 AI Phishing Shield: Phishing URL Detection System
-Hệ thống phát hiện URL độc hại dựa trên Deep Learning (CNN), được triển khai dưới dạng API (FastAPI/Docker) và tích hợp Chrome Extension để bảo vệ người dùng trong thời gian thực. Dự án này bao gồm việc xây dựng hệ thống mang tên "AI PHISHING SHIELD" với backend API triển khai trên Hugging Face.
+This project is a Deep Learning-based phishing URL detection system using a 1D-CNN architecture. It is deployed as a FastAPI backend within a Docker container and integrated with a Chrome Extension for real-time user protection. The system, named "AI PHISHING SHIELD," features a backend API hosted on Hugging Face.
 
-1. Tổng quan dự án
-Dự án xây dựng một quy trình hoàn chỉnh (End-to-End Pipeline) từ xử lý dữ liệu, huấn luyện mô hình đến triển khai thực tế. Hệ thống sử dụng mạng nơ-ron cuộn 1 chiều (1D-CNN) ở cấp độ ký tự (Character-level) để nhận diện các đặc điểm bất thường trong cấu trúc URL mà không cần bóc tách thủ công các đặc trưng.
+1. Project Overview
+The project establishes a comprehensive end-to-end pipeline, covering data preprocessing, model training, and practical deployment. It utilizes a character-level 1D Convolutional Neural Network (1D-CNN) to identify malicious patterns in URL structures without the need for manual feature engineering.
 
-2. Kiến trúc mô hình (Model Architecture)
-Mô hình được thiết kế để xử lý dữ liệu dạng chuỗi ký tự, bao gồm các lớp chính:
+2. Model Architecture
+The model is designed to process URL data as sequences of characters through the following primary layers:
 
-Character Tokenization: Chuyển đổi URL thành chuỗi số dựa trên bộ từ điển ký tự.
+Character Tokenization: Converts the URL into a sequence of integers based on a character vocabulary.
 
-Embedding Layer: Biểu diễn các ký tự trong không gian vectơ thấp chiều.
+Embedding Layer: Represents characters in a 64-dimensional low-dimensional vector space.
 
-1D Convolutional Layers: Trích xuất các đặc trưng cục bộ (n-grams) từ chuỗi URL.
+1D Convolutional Layers: Extracts local features (n-grams) from the URL character sequence.
 
-Global MaxPooling: Giữ lại các đặc trưng quan trọng nhất từ các bộ lọc.
+Global MaxPooling: Retains the most significant features identified by the filters.
 
-Fully Connected Layers: Phân loại dựa trên các đặc trưng đã trích xuất.
+Fully Connected Layers: Classifies the URL based on the extracted features.
 
-Sigmoid Output: Trả về xác suất (Probability) để phân loại nhị phân (Legitimate/Phishing).
+Sigmoid Output: Generates a probability score for binary classification (Legitimate vs. Phishing).
 
-3. Quy trình xử lý dữ liệu (Data Pipeline)
-Dữ liệu được xử lý qua các bước nghiêm ngặt để đảm bảo độ chính xác:
+3. Data Pipeline
+Data undergoes a rigorous three-step process to ensure high detection accuracy:
 
-Cleaning: Chuẩn hóa URL (lowercase), loại bỏ trùng lặp.
+3.1. Cleaning
+Converts all URLs to lowercase.
 
-Sanitization: Sử dụng Regex để gắn nhãn các thành phần nhạy cảm như IP, Token, ID hoặc các chuỗi Hex dài.
+Removes protocols (e.g., http://, https://) and the www. prefix to focus on the core domain and path structure.
 
-Vectorization: Padding chuỗi về độ dài cố định (500 ký tự) để đưa vào mô hình.
+3.2. Sanitization
+Uses Regular Expressions (Regex) to mask sensitive or highly variable components, allowing the model to focus on structural length rather than random noise:
 
-4. Hướng dẫn cài đặt và sử dụng
-Triển khai cục bộ (Local Deployment)
-Cài đặt thư viện:
+IP Addresses: 192.168.1.1 → <IP_ADDRESS>.
+
+Numeric IDs: /user/123456 → /user/<NUMERIC_ID_6>.
+
+Hex/Hash Strings: ?sid=a1b2c3... → ?sid=<HASH_FORMAT_32>.
+
+3.3. Vectorization
+Max Length: Standardized to 500 characters.
+
+Padding: Applies post-padding with zeros for sequences shorter than the maximum length.
+
+4. Installation and Usage
+Local Deployment
+Install dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
-Khởi chạy Server:
+Start the server:
 
 ```bash
 uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
-API Docs: Truy cập http://localhost:8000/docs để kiểm thử qua Swagger UI.
+API Documentation: Access the interactive Swagger UI at http://localhost:8000/docs.
 
-Triển khai với Docker
+Hugging Face Deployment
+When deployed on Hugging Face Spaces, the API documentation (Swagger UI) is available at:
+https://<username>-<space-name>.hf.space/docs
+
+Docker Deployment
+
 ```bash
 docker build -t phishing-detector .
 docker run -p 8000:7860 phishing-detector
 ```
+Chrome Extension Setup
+Navigate to chrome://extensions/ in Google Chrome.
 
-5. Cấu trúc API (API Usage)
+Enable Developer mode.
+
+Click Load unpacked and select the extension source directory.
+
+5. API Usage
 Endpoint: POST /predict
 
 Request Body:
 
 ```json
 {
-  "url": "http://example-malicious-site.com"
+  "url": "http://example-malicious-site.com/login"
 }
 ```
-Response:
+
+Response Body:
 
 ```json
 {
-  "url": "http://example-malicious-site.com",
+  "url": "http://example-malicious-site.com/login",
   "prediction": "PHISHING",
-  "probability": 0.985
+  "probability": 0.985,
+  "status": "success"
 }
 ```
 
-6. Công nghệ sử dụng
-Ngôn ngữ: Python.
+6. Project Structure
+```
+├── app/                # FastAPI application (Routes, Schemas)
+├── src/                # ML Logic (Preprocessing, Prediction, Loaders)
+├── models/             # Model files (.keras) and tokenizer (.pkl)
+├── notebooks/          # Jupyter notebooks for training
+├── tests/              # Unit testing scripts
+├── Dockerfile          # Container configuration
+└── requirements.txt    # Project dependencies
+```
 
-Deep Learning: TensorFlow / Keras.
+7. Technologies Used
+Language: Python 3.10+
 
-Backend: FastAPI.
+AI Frameworks: TensorFlow 2.16+, Keras 3.0
 
-DevOps: Docker, Hugging Face Spaces.
+Web Framework: FastAPI, Uvicorn
 
-Frontend: JavaScript (Chrome Extension API).
+DevOps: Docker, Hugging Face Spaces
+
+Frontend: JavaScript (Chrome Extension API)

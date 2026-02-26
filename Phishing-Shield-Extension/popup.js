@@ -14,18 +14,18 @@ document.getElementById('scan-btn').addEventListener('click', async () => {
     loadingUI.classList.remove('hidden');
 
     try {
-        // 1. Lấy URL của Tab đang hiển thị
+        // 1. Get the URL of the active Tab
         let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
         let currentUrl = tab.url;
 
-        // Bỏ qua các trang nội bộ của Chrome
+        // Skip internal browser system pages
         if (currentUrl.startsWith('chrome://') || currentUrl.startsWith('edge://')) {
-            throw new Error("Không thể quét trang hệ thống.");
+            throw new Error("Cannot scan system pages.");
         }
 
         urlScanned.innerText = currentUrl;
 
-        // 2. Gọi API đến FastAPI Server
+        // 2. Call the API to FastAPI Server on Hugging Face
         const API_URL = 'https://quangvu404-phishing-shield-api.hf.space/predict';
         
         const response = await fetch(API_URL, {
@@ -34,25 +34,25 @@ document.getElementById('scan-btn').addEventListener('click', async () => {
             body: JSON.stringify({ url: currentUrl })
         });
 
-        if (!response.ok) throw new Error("Server AI phản hồi lỗi.");
+        if (!response.ok) throw new Error("AI Server returned an error.");
         
         const data = await response.json();
         
-        // 3. Xử lý hiển thị kết quả
+        // 3. Handle result display
         loadingUI.classList.add('hidden');
         resultBox.classList.remove('hidden');
 
         const riskPercent = (data.probability * 100).toFixed(2);
-        probText.innerText = `Xác suất lừa đảo: ${riskPercent}%`;
+        probText.innerText = `Phishing Probability: ${riskPercent}%`;
 
         if (data.prediction === "PHISHING") {
             resultBox.className = "status-danger";
-            statusTitle.innerText = "🚨 PHÁT HIỆN LỪA ĐẢO!";
-            aiMessage.innerText = "Hệ thống AI nhận diện cấu trúc bất thường trong đường link này. Tuyệt đối không nhập tài khoản hay mật khẩu.";
+            statusTitle.innerText = "🚨 PHISHING DETECTED!";
+            aiMessage.innerText = "The AI system identified an unusual structure in this link. Do NOT enter any accounts or passwords.";
         } else {
             resultBox.className = "status-safe";
-            statusTitle.innerText = "✅ TRANG WEB AN TOÀN";
-            aiMessage.innerText = "Đường link có cấu trúc an toàn, chưa phát hiện dấu hiệu giả mạo.";
+            statusTitle.innerText = "✅ SAFE WEBSITE";
+            aiMessage.innerText = "The link structure appears safe, and no signs of phishing were detected.";
         }
 
     } catch (error) {
@@ -60,14 +60,14 @@ document.getElementById('scan-btn').addEventListener('click', async () => {
         resultBox.classList.remove('hidden');
         resultBox.className = "status-danger";
         
-        statusTitle.innerText = "⚠️ LỖI KẾT NỐI";
+        statusTitle.innerText = "⚠️ CONNECTION ERROR";
         urlScanned.innerText = "";
-        probText.innerText = "Không thể kết nối đến Máy chủ AI";
+        probText.innerText = "Could not connect to AI Server";
         aiMessage.innerText = error.message === "Failed to fetch" 
-            ? "Hãy đảm bảo Backend FastAPI (uvicorn) đang chạy ở cổng 8000." 
+            ? "Please ensure the FastAPI Backend is running correctly." 
             : error.message;
     } finally {
         btn.disabled = false;
-        btn.innerText = "🔄 Quét Lại";
+        btn.innerText = "🔄 Scan Again";
     }
 });
