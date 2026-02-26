@@ -1,8 +1,8 @@
 AI Phishing Shield: Phishing URL Detection System
-Hệ thống phát hiện URL độc hại dựa trên Deep Learning (CNN), được triển khai dưới dạng API (FastAPI/Docker) và tích hợp Chrome Extension để bảo vệ người dùng trong thời gian thực.
+Hệ thống phát hiện URL độc hại dựa trên Deep Learning (CNN), được triển khai dưới dạng API (FastAPI/Docker) và tích hợp Chrome Extension để bảo vệ người dùng trong thời gian thực. Dự án này bao gồm việc xây dựng hệ thống mang tên "AI PHISHING SHIELD" với backend API triển khai trên Hugging Face.
 
 1. Tổng quan dự án
-Dự án xây dựng một quy trình hoàn chỉnh (End-to-End Pipeline) từ xử lý dữ liệu, huấn luyện mô hình đến triển khai thực tế. Hệ thống sử dụng mạng nơ-ron cuộn 1 chiều (1D-CNN) ở cấp độ ký tự (Character-level) để nhận diện các đặc điểm bất thường trong cấu trúc URL mà không cần bóc tách thủ công các đặc trưng (Feature Engineering).
+Dự án xây dựng một quy trình hoàn chỉnh (End-to-End Pipeline) từ xử lý dữ liệu, huấn luyện mô hình đến triển khai thực tế. Hệ thống sử dụng mạng nơ-ron cuộn 1 chiều (1D-CNN) ở cấp độ ký tự (Character-level) để nhận diện các đặc điểm bất thường trong cấu trúc URL mà không cần bóc tách thủ công các đặc trưng.
 
 2. Kiến trúc mô hình (Model Architecture)
 Mô hình được thiết kế để xử lý dữ liệu dạng chuỗi ký tự, bao gồm các lớp chính:
@@ -32,33 +32,40 @@ Vectorization: Padding chuỗi về độ dài cố định (500 ký tự) để
 Triển khai cục bộ (Local Deployment)
 Cài đặt thư viện:
 
-Bash
+'''Bash
 pip install -r requirements.txt
+'''
 Khởi chạy Server:
 
-Bash
+'''Bash
 uvicorn app.main:app --host 0.0.0.0 --port 8000
+'''
 API Docs: Truy cập http://localhost:8000/docs để kiểm thử qua Swagger UI.
 
 Triển khai với Docker
-Bash
+'''Bash
 docker build -t phishing-detector .
 docker run -p 8000:7860 phishing-detector
+'''
 5. Cấu trúc API (API Usage)
 Endpoint: POST /predict
 
 Request Body:
 
-JSON
-{ "url": "http://example-malicious-site.com" }
+'''JSON
+{
+  "url": "http://example-malicious-site.com"
+}
+'''
 Response:
 
-JSON
+'''JSON
 {
   "url": "http://example-malicious-site.com",
   "prediction": "PHISHING",
   "probability": 0.985
 }
+'''
 6. Công nghệ sử dụng
 Ngôn ngữ: Python.
 
