@@ -32,40 +32,42 @@ Vectorization: Padding chuỗi về độ dài cố định (500 ký tự) để
 Triển khai cục bộ (Local Deployment)
 Cài đặt thư viện:
 
-'''Bash
+'''bash
 pip install -r requirements.txt
 '''
 Khởi chạy Server:
 
-'''Bash
+'''bash
 uvicorn app.main:app --host 0.0.0.0 --port 8000
 '''
 API Docs: Truy cập http://localhost:8000/docs để kiểm thử qua Swagger UI.
 
 Triển khai với Docker
-'''Bash
+'''bash
 docker build -t phishing-detector .
 docker run -p 8000:7860 phishing-detector
 '''
+
 5. Cấu trúc API (API Usage)
 Endpoint: POST /predict
 
 Request Body:
 
-'''JSON
+'''json
 {
   "url": "http://example-malicious-site.com"
 }
 '''
 Response:
 
-'''JSON
+'''json
 {
   "url": "http://example-malicious-site.com",
   "prediction": "PHISHING",
   "probability": 0.985
 }
 '''
+
 6. Công nghệ sử dụng
 Ngôn ngữ: Python.
 
