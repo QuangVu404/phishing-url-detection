@@ -57,19 +57,18 @@ NAME_BASED_RULES = {
 }
 
 # HÀM SANITIZE CHÍNH
-
 def get_length_replacer(mask_tag):
     """
     Hàm sinh ra một hàm replace động.
     Ví dụ: mask_tag = '<HEX_ID>'
     Kết quả replace sẽ là: Nhóm 1 (tiền tố) + '<HEX_ID_ĐộDài>'
     """
-    base_tag = mask_tag[1:-1] # Cắt bỏ ngoặc < > để lấy chữ 'HEX_ID'
+    base_tag = mask_tag[1:-1]
     
     def replacer(match):
-        prefix = match.group(1)   # Ví dụ: '/' hoặc '?id='
-        target = match.group(2)   # Ví dụ: đoạn mã Hex thực tế
-        length = len(target)      # Đo độ dài đoạn mã
+        prefix = match.group(1)
+        target = match.group(2)
+        length = len(target)
         return f"{prefix}<{base_tag}_{length}>"
         
     return replacer
@@ -86,20 +85,20 @@ def sanitize_url(url):
         
     masked_url = url
 
-    # STEP 1: Unify IP addresses 
+    # Unify IP addresses 
     masked_url = VALUE_BASED_RULES['<IPV4>'].sub('<IP_ADDRESS>', masked_url)
     masked_url = VALUE_BASED_RULES['<IPV6>'].sub('<IP_ADDRESS>', masked_url)
 
-    # STEP 2: Process DATE first (Đo độ dài ngày tháng)
+    # Process DATE first
     masked_url = VALUE_BASED_RULES['<DATE>'].sub(get_length_replacer('<DATE>'), masked_url)
 
-    # STEP 3: Other value-based patterns
+    # Other value-based patterns
     for mask_tag, compiled_pattern in VALUE_BASED_RULES.items():
         if mask_tag in ['<IPV4>', '<IPV6>', '<DATE>']:
             continue
         masked_url = compiled_pattern.sub(get_length_replacer(mask_tag), masked_url)
         
-    # STEP 4: Name-based patterns
+    # Name-based patterns
     for mask_tag, compiled_pattern in NAME_BASED_RULES.items():
         masked_url = compiled_pattern.sub(get_length_replacer(mask_tag), masked_url)
         
@@ -107,10 +106,6 @@ def sanitize_url(url):
 
 # HÀM GIẢI MÃ LINK RÚT GỌN
 def unshorten_url(url):
-    """
-    Theo dấu redirect để lấy URL cuối cùng.
-    Sử dụng httpx.Client (Chạy đồng bộ).
-    """
     short_domains = ['bit.ly', 'tinyurl.com', 't.co', 'goo.gl', 'rebrand.ly', 'is.gd', 'ow.ly', 'buff.ly']
     
     try:
@@ -121,11 +116,19 @@ def unshorten_url(url):
             if not url.startswith('http'):
                 url = 'http://' + url
             
-            # Sửa AsyncClient thành Client
-            with httpx.Client(follow_redirects=True, timeout=3.0) as client:
-                response = client.head(url)
-                return str(response.url)
-    except Exception:
-        pass # Trả về link gốc nếu quá giờ hoặc link chết
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            }
+            
+            with httpx.Client(follow_redirects=False, timeout=5.0, headers=headers) as client:
+                response = client.get(url)
+                
+                if response.status_code in (301, 302, 303, 307, 308):
+                    final_link = response.headers.get('location')
+                    if final_link:
+                        return final_link
+                        
+    except Exception as e:
+        print(f"Lỗi Unshorten Header: {e}") 
         
     return url

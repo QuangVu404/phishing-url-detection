@@ -42,15 +42,7 @@ document.getElementById('scan-btn').addEventListener('click', async () => {
         loadingUI.classList.add('hidden');
         resultBox.classList.remove('hidden');
 
-        if (data.final_url && data.final_url !== currentUrl) {
-            urlScanned.innerHTML = `
-                <span style="color: #888; text-decoration: line-through; font-size: 0.9em;">${currentUrl}</span>
-                <br>
-                <span style="color: #ff4757;">👉 Destination:</span> <strong>${data.final_url}</strong>
-            `;
-        } else {
-            urlScanned.innerText = currentUrl;
-        }
+        urlScanned.innerText = currentUrl;
 
         const riskPercent = (data.probability * 100).toFixed(2);
         probText.innerText = `Phishing Probability: ${riskPercent}%`;

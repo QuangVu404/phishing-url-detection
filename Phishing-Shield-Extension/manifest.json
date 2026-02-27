@@ -4,10 +4,30 @@
   "version": "1.0.0",
   "description": "Protect yourself from phishing websites using Deep Learning technology.",
   "permissions": [
-    "activeTab"
+    "activeTab",
+    "contextMenus",
+    "notifications"
   ],
+  "host_permissions": [
+    "<all_urls>" 
+  ],
+  "icons": {
+    "16": "icon.png",
+    "32": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Check website safety"
+    "default_title": "Check website safety",
+    "default_icon": {
+      "16": "icon.png",
+      "32": "icon.png",
+      "48": "icon.png",
+      "128": "icon.png"
+    }
   }
 }
