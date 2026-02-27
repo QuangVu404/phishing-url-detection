@@ -1,4 +1,5 @@
 import re
+import httpx
 
 def clean_url(url: str) -> str:
     url = str(url).lower()
@@ -103,3 +104,28 @@ def sanitize_url(url):
         masked_url = compiled_pattern.sub(get_length_replacer(mask_tag), masked_url)
         
     return masked_url
+
+# HÀM GIẢI MÃ LINK RÚT GỌN
+def unshorten_url(url):
+    """
+    Theo dấu redirect để lấy URL cuối cùng.
+    Sử dụng httpx.Client (Chạy đồng bộ).
+    """
+    short_domains = ['bit.ly', 'tinyurl.com', 't.co', 'goo.gl', 'rebrand.ly', 'is.gd', 'ow.ly', 'buff.ly']
+    
+    try:
+        domain = url.lower().split('/')[2] if url.startswith('http') else url.lower().split('/')[0]
+        domain = domain.replace('www.', '')
+        
+        if any(sd in domain for sd in short_domains):
+            if not url.startswith('http'):
+                url = 'http://' + url
+            
+            # Sửa AsyncClient thành Client
+            with httpx.Client(follow_redirects=True, timeout=3.0) as client:
+                response = client.head(url)
+                return str(response.url)
+    except Exception:
+        pass # Trả về link gốc nếu quá giờ hoặc link chết
+        
+    return url
