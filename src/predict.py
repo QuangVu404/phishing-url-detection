@@ -7,6 +7,10 @@ from src.caculate_entropy import calculate_entropy
 from src.config import MAX_LEN, THRESHOLD
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
+# Lấy model & tokenizer
+model = get_model()
+tokenizer = get_tokenizer()
+
 # KHỞI TẠO DANH SÁCH TRẮNG
 Tranco_FILE_PATH = 'data/top-1m-Tranco-list.csv' 
 GLOBAL_TRUSTED_DOMAINS = set(['kaggle.com', 'google.com', 'github.com', 'microsoft.com', 'apple.com'])
@@ -31,15 +35,21 @@ def predict_phishing(raw_url):
     # Giải mã link rút gọn
     url = unshorten_url(str(raw_url))
     
-    # Lấy model & tokenizer
-    model = get_model()
-    tokenizer = get_tokenizer()
-    
     # Tính Entropy trên URL GỐC
     entropy_score = calculate_entropy(str(url))
     
     # Tiền xử lý
     url_clean = clean_url(url)
+    url_clean = url_clean.rstrip('/')
+    
+    if url_clean in GLOBAL_TRUSTED_DOMAINS:
+        return {
+            "url": raw_url,
+            "final_url": url if url != raw_url else None,
+            "probability": 0.00,
+            "prediction": "LEGIT",
+            "threshold_used": 0.5
+        }
     
     # Rút trích Domain gốc để kiểm tra Whitelist
     domain = url_clean.split('/')[0]
@@ -58,7 +68,7 @@ def predict_phishing(raw_url):
     # Giảm 40% rủi ro nếu là domain uy tín và Cộng thêm rủi ro nếu mã quá hỗn loạn
     if main_domain in GLOBAL_TRUSTED_DOMAINS or domain in GLOBAL_TRUSTED_DOMAINS:
         prob = prob * 0.6
-    elif entropy_score > 4.5:
+    if entropy_score > 4.5:
         prob = min(1.0, prob + 0.1)
     
     label = 'PHISHING' if prob > threshold else 'LEGIT'
