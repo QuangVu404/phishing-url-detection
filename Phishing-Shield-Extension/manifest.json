@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "AI Phishing Shield",
   "version": "1.0.0",
-  "description": "Protect yourself from phishing websites using Deep Learning technology.",
+  "description": "Protect yourself from phishing websites.",
   "permissions": [
     "activeTab",
     "contextMenus",
