@@ -11,14 +11,11 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 model = get_model()
 tokenizer = get_tokenizer()
 
-# KHỞI TẠO DANH SÁCH TRẮNG
 Tranco_FILE_PATH = 'data/top-1m-Tranco-list.csv' 
 GLOBAL_TRUSTED_DOMAINS = set(['kaggle.com', 'google.com', 'github.com', 'microsoft.com', 'apple.com'])
 try:
     if os.path.exists(Tranco_FILE_PATH):
         df_tranco = pd.read_csv(Tranco_FILE_PATH, header=None)
-        
-        # Domain nằm ở cột thứ 2 trong file
         top_domains = df_tranco[1].astype(str).str.lower().tolist()
         
         GLOBAL_TRUSTED_DOMAINS.update(top_domains[:])
@@ -32,10 +29,8 @@ def predict_phishing(raw_url):
     """
     Dự đoán 1 URL là Phishing hay Legit, tích hợp Masking, Entropy và Whitelist.
     """
-    # Giải mã link rút gọn
     url = unshorten_url(str(raw_url))
-    
-    # Tính Entropy trên URL GỐC
+
     entropy_score = calculate_entropy(str(url))
     
     # Tiền xử lý
