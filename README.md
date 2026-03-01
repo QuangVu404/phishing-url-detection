@@ -89,7 +89,7 @@ Response Body:
 {
   "url": "http://example-malicious-site.com/login",
   "prediction": "PHISHING",
-  "probability": 0.985,
+  "probability": 0.4472,
   "status": "success"
 }
 ```
@@ -97,12 +97,12 @@ Response Body:
 6. Project Structure
 ```
 ├── app/                # FastAPI application (Routes, Schemas)
+├── data/               # Data used in project
 ├── src/                # ML Logic (Preprocessing, Prediction, Loaders)
-├── models/             # Model files (.keras) and tokenizer (.pkl)
+├── models/             # Model files (.keras), config (.json) and tokenizer (.pkl)
 ├── notebooks/          # Jupyter notebooks for training
 ├── tests/              # Unit testing scripts
-├── Dockerfile          # Container configuration
-└── requirements.txt    # Project dependencies
+└── Config Files/       # Configuration
 ```
 
 7. Technologies Used
