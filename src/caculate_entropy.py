@@ -1,15 +1,19 @@
 from collections import Counter
 import math
 
-def calculate_entropy(text):
+def calculate_entropy(text: str) -> float:
     """
     Tính độ hỗn loạn Shannon Entropy của chuỗi.
-    Chuỗi chứa nhiều ký tự ngẫu nhiên (lách luật, mã hóa) sẽ có điểm > 4.5
+    Chuỗi chứa nhiều ký tự ngẫu nhiên (lách luật, mã hóa) sẽ có điểm > 5
     """
-    if not text:
-        return 0
-    entropy = 0
-    for x in Counter(text).values():
-        p_x = x / len(text)
-        entropy += - p_x * math.log2(p_x)
+    if not isinstance(text, str) or not text:
+        return 0.0
+
+    length = len(text)
+    
+    entropy = sum(
+        -(count / length) * math.log2(count / length)
+        for count in Counter(text).values()
+    )
+
     return entropy

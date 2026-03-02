@@ -45,15 +45,12 @@ def predict_phishing(raw_url):
             "prediction": "LEGIT",
             "threshold_used": 0.5
         }
-    
-    # Rút trích Domain gốc để kiểm tra Whitelist
+
     domain = url_clean.split('/')[0]
     main_domain = '.'.join(domain.split('.')[-2:]) if '.' in domain else domain
     
-    # Masking để chống nhiễu OOV
     url_masked = sanitize_url(url_clean)
     
-    # Tokenize + Pad
     seq = tokenizer.texts_to_sequences([url_masked])
     padded = pad_sequences(seq, maxlen=MAX_LEN, padding='post', truncating='post')
     
@@ -63,7 +60,7 @@ def predict_phishing(raw_url):
     # Giảm 40% rủi ro nếu là domain uy tín và Cộng thêm rủi ro nếu mã quá hỗn loạn
     if main_domain in GLOBAL_TRUSTED_DOMAINS or domain in GLOBAL_TRUSTED_DOMAINS:
         prob = prob * 0.6
-    if entropy_score > 4.5:
+    if entropy_score > 5.0:
         prob = min(1.0, prob + 0.1)
     
     label = 'PHISHING' if prob > threshold else 'LEGIT'
