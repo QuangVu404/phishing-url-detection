@@ -7,33 +7,23 @@ from src.caculate_entropy import calculate_entropy
 from src.config import MAX_LEN, THRESHOLD
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
-# Lấy model & tokenizer
+# Get model & tokenizer
 model = get_model()
 tokenizer = get_tokenizer()
 
-Tranco_FILE_PATH = 'data/top-1m-Tranco-list.csv' 
-GLOBAL_TRUSTED_DOMAINS = set(['kaggle.com', 'google.com', 'github.com', 'microsoft.com', 'apple.com'])
-try:
-    if os.path.exists(Tranco_FILE_PATH):
-        df_tranco = pd.read_csv(Tranco_FILE_PATH, header=None)
-        top_domains = df_tranco[1].astype(str).str.lower().tolist()
-        
-        GLOBAL_TRUSTED_DOMAINS.update(top_domains[:])
-        print(f"Đã tải {len(GLOBAL_TRUSTED_DOMAINS)} domains vào Danh sách Trắng.")
-    else:
-        print("Không tìm thấy file Tranco. Dùng danh sách trắng mặc định.")
-except Exception as e:
-    print(f"Lỗi khi tải file Tranco: {e}. Dùng danh sách trắng mặc định.")
+Tranco_FILE_PATH = 'data/top-1m-Tranco-list.csv'
+df_tranco = pd.read_csv(Tranco_FILE_PATH, header=None)
+GLOBAL_TRUSTED_DOMAINS = set(df_tranco[1].astype(str).str.lower().tolist())
 
 def predict_phishing(raw_url):
     """
-    Dự đoán 1 URL là Phishing hay Legit, tích hợp Masking, Entropy và Whitelist.
+    Predict whether a URL is Phishing or Legit, integrating Masking, Entropy, and Whitelist.
     """
     url = unshorten_url(str(raw_url))
 
     entropy_score = calculate_entropy(str(url))
     
-    # Tiền xử lý
+    # Preprocessing
     url_clean = clean_url(url)
     url_clean = url_clean.rstrip('/')
     
@@ -57,7 +47,7 @@ def predict_phishing(raw_url):
     prob = float(model.predict(padded, verbose=0).flatten()[0])
     threshold = THRESHOLD
     
-    # Giảm 40% rủi ro nếu là domain uy tín và Cộng thêm rủi ro nếu mã quá hỗn loạn
+    # Reduce risk by 40% if it's a trusted domain and add risk if the code is highly chaotic
     if main_domain in GLOBAL_TRUSTED_DOMAINS or domain in GLOBAL_TRUSTED_DOMAINS:
         prob = prob * 0.6
     if entropy_score > 5.0:

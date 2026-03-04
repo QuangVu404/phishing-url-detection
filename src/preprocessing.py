@@ -1,6 +1,7 @@
 import re
 import httpx
 
+# Remove protocol and www for consistent domain extraction
 def clean_url(url: str) -> str:
     url = str(url).lower()
     url = re.sub(r'^https?://', '', url)
@@ -56,12 +57,11 @@ NAME_BASED_RULES = {
     '<IP_PARAM>': re.compile(r'([?&](?:ip|ip_address|remote_addr|client_ip)=)([^&#<]+)', flags=re.IGNORECASE),
 }
 
-# HÀM SANITIZE CHÍNH
 def get_length_replacer(mask_tag):
     """
-    Hàm sinh ra một hàm replace động.
-    Ví dụ: mask_tag = '<HEX_ID>'
-    Kết quả replace sẽ là: Nhóm 1 (tiền tố) + '<HEX_ID_ĐộDài>'
+    Generates a dynamic replace function.
+    Example: mask_tag = '<HEX_ID>'
+    The replacement result will be: Group 1 (prefix) + '<HEX_ID_length>'
     """
     base_tag = mask_tag[1:-1]
     
@@ -104,7 +104,6 @@ def sanitize_url(url):
         
     return masked_url
 
-# HÀM GIẢI MÃ LINK RÚT GỌN
 def unshorten_url(url):
     short_domains = ['bit.ly', 'tinyurl.com', 't.co', 'goo.gl', 'rebrand.ly', 'is.gd', 'ow.ly', 'buff.ly']
     
@@ -129,6 +128,6 @@ def unshorten_url(url):
                         return final_link
                         
     except Exception as e:
-        print(f"Lỗi Unshorten Header: {e}") 
+        print(f"Unshorten Header Error: {e}") 
         
     return url

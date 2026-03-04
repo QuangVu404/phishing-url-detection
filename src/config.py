@@ -1,7 +1,6 @@
 import os
 import json
 
-# Lấy cấu hình từ file models/config.json nếu có, hoặc dùng mặc định
 def load_config():
     config_path = os.getenv("CONFIG_PATH", "models/config_20260224_165928.json")
     try:

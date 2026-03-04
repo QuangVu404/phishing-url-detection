@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "AI Phishing Shield",
+  "name": "AI Phishing Decector",
   "version": "1.0.0",
   "description": "Protect yourself from phishing websites.",
   "permissions": [

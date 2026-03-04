@@ -1,7 +1,7 @@
 chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({
         id: "scanPhishingLink",
-        title: "Scan this link with AI Phishing Shield",
+        title: "Scan this link with AI Phishing Decector",
         contexts: ["link"]
     });
 });
@@ -14,7 +14,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
         chrome.notifications.create("scanning", {
             type: "basic",
             iconUrl: "icon.png",
-            title: "AI Phishing Shield",
+            title: "AI Phishing Decector",
             message: `Analyzing: ${targetUrl}\nPlease wait while the AI extracts features...`
         });
 

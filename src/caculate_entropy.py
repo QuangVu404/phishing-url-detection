@@ -3,8 +3,8 @@ import math
 
 def calculate_entropy(text: str) -> float:
     """
-    Tính độ hỗn loạn Shannon Entropy của chuỗi.
-    Chuỗi chứa nhiều ký tự ngẫu nhiên (lách luật, mã hóa) sẽ có điểm > 5
+    Calculate the Shannon Entropy of a string.
+    Strings containing many random characters (obfuscation, encoding) will typically have a score > 5.
     """
     if not isinstance(text, str) or not text:
         return 0.0
