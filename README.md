@@ -96,13 +96,50 @@ Response Body:
 
 6. Project Structure
 ```
-├── app/                # FastAPI application (Routes, Schemas)
-├── data/               # Data used in project
-├── src/                # ML Logic (Preprocessing, Prediction, Loaders)
-├── models/             # Model files (.keras), config (.json) and tokenizer (.pkl)
-├── notebooks/          # Jupyter notebooks for training
-├── tests/              # Unit testing scripts
-└── Config Files/       # Configuration
+AI_Phishing_Shield/
+├── app/
+│   ├── main.py
+│   ├── routes.py
+│   └── schemas.py
+├── data/
+│   ├── Real_urls_Data
+│   │   ├── FineTune.csv
+│   │   ├── Test.csv
+│   │   └── Validate_ft.csv
+│   └── top-1m-Tranco-list.csv
+├── models
+│   ├── config_.json
+│   ├── resnet1d_se_.keras
+│   └── tokenizer_.pkl
+├── notebook/
+│   └── phishing-url-detection-using-cnn-skip-connection.ipynb
+├── Phishing-Shield-Extension-Frontend
+│   ├── background.js
+│   ├── icon.png
+│   ├── manifest.json
+│   ├── popup.css
+│   ├── popup.html
+│   └── popup.js
+├── src/
+│   ├── features/
+│   │   ├── caculate_url_entropy.py
+│   │   └── sanitize_url.py
+│   ├── inference/
+│   │   ├── config.py
+│   │   ├── model_loader.py
+│   │   └── tokenizer_loader.py
+│   ├── preprocessor/
+│   │   ├── clean_url.py
+│   │   └── unshorten_url.py
+│   └── predict.py
+├── Dockerfile
+├── .dockerignore
+├── .env
+├── .gitignore
+├── pytest.ini
+├── requirements.txt
+├── LICENSE
+└── README.md
 ```
 
 7. Technologies Used
