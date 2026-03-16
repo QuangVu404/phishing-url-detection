@@ -20,33 +20,27 @@ Click the puzzle icon in your Chrome toolbar and pin the AI Phishing Shield icon
 
 Browse the web normally. The extension will automatically analyze the URLs of the tabs you visit in the background.
 
-1. Project Overview
+## 1. Project Overview
 The project establishes a comprehensive end-to-end pipeline, covering data preprocessing, model training, and practical deployment. It utilizes a character-level 1D Convolutional Neural Network (1D-CNN) to identify malicious patterns in URL structures without the need for manual feature engineering.
 
-2. Model Architecture
+## 2. Model Architecture
 The model is designed to process URL data as sequences of characters through the following primary layers:
-
 Character Tokenization: Converts the URL into a sequence of integers based on a character vocabulary.
-
 Embedding Layer: Represents characters in a 64-dimensional low-dimensional vector space.
-
 1D Convolutional Layers: Extracts local features (n-grams) from the URL character sequence.
-
 Global MaxPooling: Retains the most significant features identified by the filters.
-
 Fully Connected Layers: Classifies the URL based on the extracted features.
-
 Sigmoid Output: Generates a probability score for binary classification (Legitimate vs. Phishing).
 
-3. Data Pipeline
+## 3. Data Pipeline
 Data undergoes a rigorous three-step process to ensure high detection accuracy:
 
-3.1. Cleaning
+## 3.1. Cleaning
 Converts all URLs to lowercase.
 
 Removes protocols (e.g., http://, https://) and the www. prefix to focus on the core domain and path structure.
 
-3.2. Sanitization
+## 3.2. Sanitization
 Uses Regular Expressions (Regex) to mask sensitive or highly variable components, allowing the model to focus on structural length rather than random noise:
 
 IP Addresses: 192.168.1.1 → <IP_ADDRESS>.
@@ -55,12 +49,12 @@ Numeric IDs: /user/123456 → /user/<NUMERIC_ID_6>.
 
 Hex/Hash Strings: ?sid=a1b2c3... → ?sid=<HASH_FORMAT_32>.
 
-3.3. Vectorization
+## 3.3. Vectorization
 Max Length: Standardized to 250 characters.
 
 Padding: Applies post-padding with zeros for sequences shorter than the maximum length.
 
-4. Installation and Usage
+## 4. Installation and Usage
 Local Deployment
 Install dependencies:
 
@@ -91,7 +85,7 @@ Enable Developer mode.
 
 Click Load unpacked and select the extension source directory.
 
-5. API Usage
+## 5. API Usage
 Endpoint: POST /predict
 
 Request Body:
@@ -113,7 +107,7 @@ Response Body:
 }
 ```
 
-6. Project Structure
+## 6. Project Structure
 ```
 AI_Phishing_Shield/
 ├── app/
@@ -160,13 +154,10 @@ AI_Phishing_Shield/
 └── README.md
 ```
 
-7. Technologies Used
+## 7. Technologies Used
+
 Language: Python 3.10+
-
 AI Frameworks: TensorFlow 2.16+, Keras 3.0
-
 Web Framework: FastAPI, Uvicorn
-
 DevOps: Docker, Hugging Face Spaces
-
 Frontend: JavaScript (Chrome Extension API)
