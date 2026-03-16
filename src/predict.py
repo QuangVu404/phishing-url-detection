@@ -23,7 +23,7 @@ Pipeline xử lý dự đoán:
                   - Giảm 40% nếu main_domain uy tín và không nằm trong Blacklist Subdomain.
                   - Cộng thêm 10% nếu entropy domain cực cao (> 4.5).
 
-QUAN TRỌNG — Lazy Singleton Pattern:
+Lazy Singleton Pattern:
     Các biến _model, _tokenizer, _trusted_domains KHÔNG được load khi import module.
     Chúng chỉ load lần đầu tiên khi predict_phishing() được gọi.
 
@@ -128,18 +128,6 @@ def predict_phishing(raw_url: str) -> dict:
 
     domain      = url_clean.split("/")[0]
     main_domain = ".".join(domain.split(".")[-2:]) if "." in domain else domain
-
-    is_abused = any(domain.endswith(s) for s in ABUSED_SUBDOMAINS)
-    if main_domain in trusted_domains and not is_abused:
-        return {
-            "url":            raw_url,
-            "resolved_url":   resolved if resolved != raw_url else None,
-            "masked_url":     None,
-            "entropy":        None,
-            "probability":    0.00,
-            "prediction":     "LEGIT",
-            "threshold_used": THRESHOLD,
-        }
 
     domain_entropy = calculate_entropy(domain)
 

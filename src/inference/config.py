@@ -2,7 +2,7 @@ import os
 import json
 
 def load_config():
-    config_path = os.getenv("CONFIG_PATH", "models/config.json")
+    config_path = os.getenv("CONFIG_PATH", "models/config_.json")
     try:
         with open(config_path, 'r') as f:
             return json.load(f)

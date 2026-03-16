@@ -37,7 +37,7 @@ Numeric IDs: /user/123456 → /user/<NUMERIC_ID_6>.
 Hex/Hash Strings: ?sid=a1b2c3... → ?sid=<HASH_FORMAT_32>.
 
 3.3. Vectorization
-Max Length: Standardized to 500 characters.
+Max Length: Standardized to 250 characters.
 
 Padding: Applies post-padding with zeros for sequences shorter than the maximum length.
 
@@ -136,7 +136,6 @@ AI_Phishing_Shield/
 ├── .dockerignore
 ├── .env
 ├── .gitignore
-├── pytest.ini
 ├── requirements.txt
 ├── LICENSE
 └── README.md
