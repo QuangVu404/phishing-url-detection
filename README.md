@@ -164,7 +164,7 @@ AI_Phishing_Shield/
 
 Language: Python 3.10+
 
-AI Frameworks: TensorFlow 2.16+, Keras 3.0
+AI Frameworks: TensorFlow 2.16+, Keras 3.0, Scikit-learn 1.3.2
 
 Web Framework: FastAPI, Uvicorn
 
