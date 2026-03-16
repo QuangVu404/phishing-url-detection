@@ -1,7 +1,7 @@
 AI Phishing Shield: Phishing URL Detection System
 This project is a Deep Learning-based phishing URL detection system using a 1D-CNN architecture. It is deployed as a FastAPI backend within a Docker container and integrated with a Chrome Extension for real-time user protection. The system, named "AI PHISHING SHIELD," features a backend API hosted on Hugging Face.
 
-Quick Start: How to Use the Chrome Extension
+## Quick Start: How to Use the Chrome Extension
 The easiest way to experience the AI Phishing Shield is through our real-time Chrome Extension. Follow these steps to set it up and stay protected:
 
 Step 1: Install the Extension
@@ -25,11 +25,17 @@ The project establishes a comprehensive end-to-end pipeline, covering data prepr
 
 ## 2. Model Architecture
 The model is designed to process URL data as sequences of characters through the following primary layers:
+
 Character Tokenization: Converts the URL into a sequence of integers based on a character vocabulary.
+
 Embedding Layer: Represents characters in a 64-dimensional low-dimensional vector space.
+
 1D Convolutional Layers: Extracts local features (n-grams) from the URL character sequence.
+
 Global MaxPooling: Retains the most significant features identified by the filters.
+
 Fully Connected Layers: Classifies the URL based on the extracted features.
+
 Sigmoid Output: Generates a probability score for binary classification (Legitimate vs. Phishing).
 
 ## 3. Data Pipeline
@@ -157,7 +163,11 @@ AI_Phishing_Shield/
 ## 7. Technologies Used
 
 Language: Python 3.10+
+
 AI Frameworks: TensorFlow 2.16+, Keras 3.0
+
 Web Framework: FastAPI, Uvicorn
+
 DevOps: Docker, Hugging Face Spaces
+
 Frontend: JavaScript (Chrome Extension API)
