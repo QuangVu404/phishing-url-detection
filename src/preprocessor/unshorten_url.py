@@ -1,6 +1,20 @@
 import httpx
 
+"""
+URL UNSHORTENER UTILITY
+Resolves shortened URLs (e.g., bit.ly, tinyurl) to their true destination.
+
+- Fast & Secure: Uses `follow_redirects=False` to fetch only the HTTP 'Location' 
+  header (3xx status), preventing malicious payload execution and saving time.
+- Targeted: Only runs on a predefined list of known shortener domains.
+- Bypass: Uses a standard browser User-Agent to avoid basic bot blocks.
+"""
+
 def unshorten_url(url):
+    """
+    INPUT:  Raw URL string.
+    OUTPUT: Resolved URL (if successful), else returns the original URL.
+    """
     short_domains = ['bit.ly', 'tinyurl.com', 't.co', 'goo.gl', 'rebrand.ly', 'is.gd', 'ow.ly', 'buff.ly']
     
     try:
